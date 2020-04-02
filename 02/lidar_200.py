@@ -51,20 +51,40 @@ pandas_stddev = data["lidar"].std()
 
 freqs = pd.DataFrame(data["lidar"].value_counts())
 freqs["probs"] = freqs["lidar"] / len(data["lidar"])
-print(freqs.transpose())
-print(sum(freqs["probs"]))
+#print(freqs.transpose())
+#print(sum(freqs["probs"]))
 
-freqs["probs"].sort_index().plot.bar()
-plt.show()
+#freqs["probs"].sort_index().plot.bar()
+#plt.show()
 
 def drawing():
     return freqs.sample(n = 1, weights = "probs").index[0]
 
-print(drawing())
+#print(drawing())
 
-samples = [drawing() for i in range(1000)]
+#samples = [drawing() for i in range(10000)]
 
-simulated = pd.DataFrame(samples, columns = ["lidar"])
-p = simulated["lidar"]
-p.hist(bins = max(p) - min(p), color = "orange", align = 'left')
+#simulated = pd.DataFrame(samples, columns = ["lidar"])
+#p = simulated["lidar"]
+#p.hist(bins = max(p) - min(p), color = "orange", align = 'left')
+#plt.show()
+
+def p(z, mu = 209.7, dev = 23.4):
+    return math.exp(-(z - mu) ** 2 / (2 * dev)) / math.sqrt(2 * math.pi * dev)
+
+zs = range(190, 230)
+ys = [p(z) for z in zs]
+
+#plt.plot(zs, ys)
+#plt.show()
+
+def prob(z, width = 0.5):
+    return width * (p(z + width) + p(z - width))
+
+zs = range(190, 230)
+ys = [prob(z) for z in zs]
+
+plt.bar(zs, ys, color = "red", alpha = 0.3)
+f = freqs["probs"].sort_index()
+plt.bar(f.index, f.values, color = "blue", alpha = 0.3)
 plt.show()
