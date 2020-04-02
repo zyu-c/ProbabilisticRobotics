@@ -24,17 +24,27 @@ diff_square = [(z - mean) ** 2 for z in zs]
 
 sampling_var = sum(diff_square) / (len(zs))
 unbiased_var = sum(diff_square) / (len(zs) - 1)
-print(sampling_var)
-print(unbiased_var)
+#print(sampling_var)
+#print(unbiased_var)
 
 pandas_sampling_var = data["lidar"].var(ddof=False)
 pandas_default_var = data["lidar"].var()
-print(pandas_sampling_var)
-print(pandas_default_var)
+#print(pandas_sampling_var)
+#print(pandas_default_var)
 
 import numpy as np
 
 numpy_default_var = np.var(data["lidar"])
 numpy_unbiased_var = np.var(data["lidar"], ddof = 1)
-print(numpy_default_var)
-print(numpy_unbiased_var)
+#print(numpy_default_var)
+#print(numpy_unbiased_var)
+
+import math
+
+stddev1 = math.sqrt(sampling_var)
+stddev2 = math.sqrt(unbiased_var)
+pandas_stddev = data["lidar"].std()
+
+print(stddev1)
+print(stddev2)
+print(pandas_stddev)
