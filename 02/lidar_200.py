@@ -8,4 +8,8 @@ data = pd.read_csv("../sensor_data/sensor_data_200.txt", delimiter=" ", header=N
 import matplotlib.pyplot as plt
 
 data["lidar"].hist(bins = max(data["lidar"]) - min(data["lidar"]), align = 'left')
-plt.show()
+#plt.show()
+
+mean1 = sum(data["lidar"].values) / len(data["lidar"].values)
+mean2 = data["lidar"].mean()
+print(mean1, mean2)
