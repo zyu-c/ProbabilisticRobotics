@@ -45,6 +45,26 @@ stddev1 = math.sqrt(sampling_var)
 stddev2 = math.sqrt(unbiased_var)
 pandas_stddev = data["lidar"].std()
 
-print(stddev1)
-print(stddev2)
-print(pandas_stddev)
+#print(stddev1)
+#print(stddev2)
+#print(pandas_stddev)
+
+freqs = pd.DataFrame(data["lidar"].value_counts())
+freqs["probs"] = freqs["lidar"] / len(data["lidar"])
+print(freqs.transpose())
+print(sum(freqs["probs"]))
+
+freqs["probs"].sort_index().plot.bar()
+plt.show()
+
+def drawing():
+    return freqs.sample(n = 1, weights = "probs").index[0]
+
+print(drawing())
+
+samples = [drawing() for i in range(1000)]
+
+simulated = pd.DataFrame(samples, columns = ["lidar"])
+p = simulated["lidar"]
+p.hist(bins = max(p) - min(p), color = "orange", align = 'left')
+plt.show()
