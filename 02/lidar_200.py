@@ -84,7 +84,23 @@ def prob(z, width = 0.5):
 zs = range(190, 230)
 ys = [prob(z) for z in zs]
 
-plt.bar(zs, ys, color = "red", alpha = 0.3)
+#plt.bar(zs, ys, color = "red", alpha = 0.3)
 f = freqs["probs"].sort_index()
-plt.bar(f.index, f.values, color = "blue", alpha = 0.3)
+#plt.bar(f.index, f.values, color = "blue", alpha = 0.3)
+#plt.show()
+
+from scipy.stats import norm
+zs = range(190, 230)
+ys = [norm.pdf(z, mean1, stddev1) for z in zs]
+#plt.plot(zs, ys)
+#plt.show()
+
+zs = range(190, 230)
+ys = [norm.cdf(z, mean1, stddev1) for z in zs]
+#plt.plot(zs, ys, color = "red")
+#plt.show()
+
+zs = range(190, 230)
+ys = [norm.cdf(z + 0.5, mean1, stddev1) - norm.cdf(z - 0.5, mean1, stddev1) for z in zs]
+plt.bar(zs, ys)
 plt.show()
