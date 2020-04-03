@@ -29,6 +29,11 @@ x, y = np.mgrid[0:40, 710:750]
 pos = np.empty(x.shape + (2, ))
 pos[:, :, 0] = x
 pos[:, :, 1] = y
-cont = plt.contour(x, y, irlidar.pdf(pos))
-cont.clabel(fmt = '%1.1e')
+#cont = plt.contour(x, y, irlidar.pdf(pos))
+#cont.clabel(fmt = '%1.1e')
+#plt.show()
+
+c = d.cov().values + np.array([[0, 20], [20, 0]])
+tmp = multivariate_normal(mean = d.mean().values.T, cov = c)
+cont = plt.contour(x, y, tmp.pdf(pos))
 plt.show()
