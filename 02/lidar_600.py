@@ -26,5 +26,24 @@ probs = freqs / len(data)
 
 import seaborn as sns
 #sns.heatmap(probs)
-sns.jointplot(data["hour"], data["lidar"], data, kind = "kde")
+#sns.jointplot(data["hour"], data["lidar"], data, kind = "kde")
+#plt.show()
+
+p_t = pd.DataFrame(probs.sum())
+#p_t.plot()
+#print(p_t.transpose())
+#plt.show()
+#print(p_t.sum())
+
+p_z = pd.DataFrame(probs.transpose().sum())
+#p_z.plot()
+#print(p_z.transpose())
+#plt.show()
+#print(p_z.sum())
+
+cond_z_t = probs / p_t[0]
+#print(cond_z_t)
+
+(cond_z_t[6]).plot.bar(color = "blue", alpha = 0.5)
+(cond_z_t[14]).plot.bar(color = "orange", alpha = 0.5)
 plt.show()
