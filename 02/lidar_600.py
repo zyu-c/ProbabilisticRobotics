@@ -14,6 +14,17 @@ d = data.groupby("hour")
 #d.lidar.mean().plot()
 #plt.show()
 
-d.lidar.get_group(6).hist()
-d.lidar.get_group(14).hist()
+#d.lidar.get_group(6).hist()
+#d.lidar.get_group(14).hist()
+#plt.show()
+
+each_hour = {i : d.lidar.get_group(i).value_counts().sort_index() for i in range(24)}
+freqs = pd.concat(each_hour, axis = 1)
+freqs = freqs.fillna(0)
+probs = freqs / len(data)
+#print(probs)
+
+import seaborn as sns
+#sns.heatmap(probs)
+sns.jointplot(data["hour"], data["lidar"], data, kind = "kde")
 plt.show()
