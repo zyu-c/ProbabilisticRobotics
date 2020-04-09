@@ -70,10 +70,10 @@ class Robot(IdealRobot):
 class Camera(IdealCamera):
     def __init__(self, env_map, \
             distance_range = (0.5, 6.0), direction_range = (-math.pi / 3, math.pi / 3), \
-            distance_noise_rate = 0.1, direction_noise_rate = math.pi / 90):
+            distance_noise_rate = 0.1, direction_noise = math.pi / 90):
         super().__init__(env_map, distance_range, direction_range)
         self.distance_noise_rate = distance_noise_rate
-        self.direction_noise_rate = direction_noise_rate
+        self.direction_noise = direction_noise
 
 world = World(30, 0.1)
 
