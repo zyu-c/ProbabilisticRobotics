@@ -13,6 +13,7 @@ class Mcl:
 class EstimationAgent(Agent):
     def __init__(self, nu, omega, estimetor):
         super().__init__(nu, omega)
+        self.estimator = estimator
 
     def draw(self, ax, elems):
         elems.append(ax.text(0, 0, "hoge", fontsize = 10))
