@@ -57,7 +57,7 @@ def trial(motion_noise_stds):
     world.append(r)
     world.draw()
 
-trial({"nn":0.01, "no":0.02, "on":0.03, "oo":0.04})
+trial({"nn":0.001, "no":0.001, "on":0.13, "oo":0.001})
 
 '''
 initial_pose = np.array([0, 0, 0]).T
