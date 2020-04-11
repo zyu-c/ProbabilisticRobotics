@@ -15,3 +15,12 @@ for i in range(100):
     robots.append(copy_r)
 
 world.draw()
+
+import pandas as pd
+
+poses = pd.DataFrame([[math.sqrt(r.pose[0] ** 2 + r.pose[1] ** 2), r.pose[2]] for r in robots], columns = ['r', 'theta'])
+print(poses.transpose())
+
+print(poses["theta"].var())
+print(poses["r"].mean())
+print(math.sqrt(poses["theta"].var() / poses["r"].mean()))
