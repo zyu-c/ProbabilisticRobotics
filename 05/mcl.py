@@ -14,7 +14,7 @@ class Particle:
         self.pose = IdealRobot.state_transition(noised_nu, noised_omega, time, self.pose)
 
 class Mcl:
-    def __init__(self, init_pose, num, motion_noise_stds):
+    def __init__(self, init_pose, num, motion_noise_stds = {"nn":0.19, "no":0.001, "on":0.13, "oo":0.2}):
         self.particles = [Particle(init_pose) for i in range(num)]
         v = motion_noise_stds
         c = np.diag([v["nn"] **2, v["no"] ** 2, v["on"] ** 2, v["oo"] ** 2])
@@ -47,14 +47,11 @@ class EstimationAgent(Agent):
     def draw(self, ax, elems):
         self.estimator.draw(ax, elems)
 
-def trial(motion_noise_stds):
-    time_interval = 0.1
-    world = World(30, time_interval)
-    initial_pose = np.array([0, 0, 0]).T
-    estimator = Mcl(initial_pose, 100, motion_noise_stds)
-    circling = EstimationAgent(time_interval, 0.2, 10.0 / 180 * math.pi, estimator)
-    r = Robot(initial_pose, sensor = None, agent = circling, color = "red")
-    world.append(r)
-    world.draw()
-
-trial({"nn":0.19, "no":0.001, "on":0.13, "oo":0.2})
+time_interval = 0.1
+world = World(30, time_interval)
+initial_pose = np.array([0, 0, 0]).T
+estimator = Mcl(initial_pose, 100)
+circling = EstimationAgent(time_interval, 0.2, 10.0 / 180 * math.pi, estimator)
+r = Robot(initial_pose, sensor = None, agent = circling, color = "red")
+world.append(r)
+world.draw()
