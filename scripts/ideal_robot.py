@@ -58,7 +58,7 @@ class IdealRobot:
         elems.append(ax.add_patch(c))
 
         self.poses.append(self.pose)
-        elems += ax.plot([e[0] for e in self.poses], [e[1] for e in self.poses], linewidth = 0.5, color = "black")
+        #elems += ax.plot([e[0] for e in self.poses], [e[1] for e in self.poses], linewidth = 0.5, color = "black")
 
         if self.sensor and len(self.poses) > 1:
             self.sensor.draw(ax, elems, self.poses[-2])
