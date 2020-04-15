@@ -2,6 +2,8 @@ import sys
 sys.path.append("../scripts")
 from robot import *
 from scipy.stats import multivariate_normal
+import random
+import copy
 
 class Particle:
     def __init__(self, init_pose, weight):
@@ -24,8 +26,6 @@ class Particle:
             cov = np.diag(np.array([distance_dev ** 2, direction_dev ** 2]))
             self.weight *= multivariate_normal(mean = particle_suggest_pos, cov = cov).pdf(obs_pos)
 
-        print(observation)
-
 class Mcl:
     def __init__(self, envmap, init_pose, num, motion_noise_stds = {"nn":0.19, "no":0.001, "on":0.13, "oo":0.2}, \
             distance_dev_rate = 0.14, direction_dev = 0.05):
@@ -44,6 +44,16 @@ class Mcl:
     def observation_update(self, observation):
         for p in self.particles:
             p.observation_update(observation, self.map, self.distance_dev_rate, self.direction_dev)
+        self.resampling()
+
+    def resampling(self):
+        ws = [e.weight for e in self.particles]
+        if sum(ws) < 1e-100:
+            ws = [e + 1e-100 for e in ws]
+        ps = random.choices(self.particles, weights = ws, k = len(self.particles))
+        self.particles = [copy.deepcopy(e) for e in ps]
+        for p in self.particles:
+            p.weight = 1.0 / len(self.particles)
 
     def draw(self, ax, elems):
         xs = [p.pose[0] for p in self.particles]
