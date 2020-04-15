@@ -47,10 +47,19 @@ class Mcl:
         self.resampling()
 
     def resampling(self):
-        ws = [e.weight for e in self.particles]
-        if sum(ws) < 1e-100:
+        ws = np.cumsum([e.weight for e in self.particles])
+        if ws[-1] < 1e-100:
             ws = [e + 1e-100 for e in ws]
-        ps = random.choices(self.particles, weights = ws, k = len(self.particles))
+        step = ws[-1] / len(self.particles)
+        r = np.random.uniform(0.0, step)
+        cur_pos = 0
+        ps = []
+        while(len(ps) < len(self.particles)):
+            if r < ws[cur_pos]:
+                ps.append(self.particles[cur_pos])
+                r += step
+            else:
+                cur_pos += 1
         self.particles = [copy.deepcopy(e) for e in ps]
         for p in self.particles:
             p.weight = 1.0 / len(self.particles)
