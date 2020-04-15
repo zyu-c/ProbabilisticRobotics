@@ -36,6 +36,13 @@ class Mcl:
         v = motion_noise_stds
         c = np.diag([v["nn"] **2, v["no"] ** 2, v["on"] ** 2, v["oo"] ** 2])
         self.motion_noise_rate_pdf = multivariate_normal(cov = c)
+        self.ml = self.particles[0]
+        self.pose = self.ml.pose
+
+    def set_ml(self):
+        i = np.argmax([p.weight for p in self.particles])
+        self.ml = self.particles[i]
+        self.pose = self.ml.pose
 
     def motion_update(self, nu, omega, time):
         for p in self.particles:
@@ -44,6 +51,7 @@ class Mcl:
     def observation_update(self, observation):
         for p in self.particles:
             p.observation_update(observation, self.map, self.distance_dev_rate, self.direction_dev)
+        self.set_ml()
         self.resampling()
 
     def resampling(self):
@@ -88,6 +96,9 @@ class EstimationAgent(Agent):
 
     def draw(self, ax, elems):
         self.estimator.draw(ax, elems)
+        x, y, t = self.estimator.pose
+        s = "({:.2f}, {:.2f}, {})".format(x, y, int(t * 180 / math.pi) % 360)
+        elems.append(ax.text(x, y + 0.1, s, fontsize = 8))
 
 def trial():
     time_interval = 0.1
