@@ -13,6 +13,9 @@ class Particle:
         noised_omega = omega + ns[2] * math.sqrt(abs(nu) / time) + ns[3] * math.sqrt(abs(omega) / time)
         self.pose = IdealRobot.state_transition(noised_nu, noised_omega, time, self.pose)
 
+    def observation_update(self, observation):
+        print(observation)
+
 class Mcl:
     def __init__(self, init_pose, num, motion_noise_stds = {"nn":0.19, "no":0.001, "on":0.13, "oo":0.2}):
         self.particles = [Particle(init_pose) for i in range(num)]
@@ -23,6 +26,10 @@ class Mcl:
     def motion_update(self, nu, omega, time):
         for p in self.particles:
             p.motion_update(nu, omega, time, self.motion_noise_rate_pdf)
+
+    def observation_update(self, observation):
+        for p in self.particles:
+            p.observation_update(observation)
 
     def draw(self, ax, elems):
         xs = [p.pose[0] for p in self.particles]
@@ -42,6 +49,7 @@ class EstimationAgent(Agent):
     def decision(self, observation = None):
         self.estimator.motion_update(self.prev_nu, self.prev_omega, self.time_interval)
         self.prev_nu, self.prev_omega = self.nu, self.omega
+        self.estimator.observation_update(observation)
         return self.nu, self.omega
 
     def draw(self, ax, elems):
